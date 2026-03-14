@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* A nice, soft background color for our nature journaling app */
+body {
+    @apply bg-slate-50 text-slate-900;
+}
