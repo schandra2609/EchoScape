@@ -22,7 +22,7 @@ function App() {
             <div className="flex items-center">
               <Link to="/" className="flex items-center gap-2">
                 <Leaf className="h-6 w-6 text-forest" />
-                <span className="text-xl font-bold text-slate-800 tracking-tight">Echoscape</span>
+                <span className="text-xl font-bold text-slate-800 tracking-tight">EchoScape</span>
               </Link>
             </div>
 

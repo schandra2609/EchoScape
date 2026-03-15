@@ -1,0 +1,51 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: echoscape-backend-dev
+    ports:
+      - "5000:5000"
+    env_file:
+      # Explicitly pointing to your development environment file
+      - ./server/.env.development 
+    environment:
+      - NODE_ENV=development
+    volumes:
+      # Maps your local server code into the container for live-reloading
+      - ./server:/app
+      # Prevents your local node_modules from overwriting the container's Linux-based modules
+      - /app/node_modules
+    # Overrides the Dockerfile's "npm start" to run your nodemon script
+    command: npm run dev
+    restart: unless-stopped
+
+  frontend:
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
+      # CRITICAL: This tells Docker to stop building before it gets to the Nginx stage!
+      # We just want the Node.js environment for local development.
+      target: builder
+    container_name: echoscape-frontend-dev
+    # Vite is configured to use PORT 3000
+    ports:
+      - "3000:3000" 
+    env_file:
+      # Explicitly pointing to your development environment file
+      - ./client/.env.development 
+    environment:
+      - NODE_ENV=development
+    volumes:
+      # Maps your local React code into the container for instant hot-module replacement
+      - ./client:/app
+      - /app/node_modules
+    # Overrides the build command to start the Vite dev server
+    # The --host flag is required in Docker so Vite accepts connections from your browser
+    command: npm run dev -- --host
+    depends_on:
+      - backend
+    restart: unless-stopped
